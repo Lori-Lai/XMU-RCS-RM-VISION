@@ -30,7 +30,9 @@
 
 ### 框架
 
-<img src="./doc/auto_aim.png" alt="auto_aim" style="zoom:10%;" />
+<p align="center">
+  <img src="./doc/auto_aim.png" alt="auto_aim" width="200" />
+</p>
 
 ## 二、环境配置
 
