@@ -1,0 +1,26 @@
+/hik_camera:
+  ros__parameters:
+    camera_info_url: "package://hik_camera/config/camera_info.yaml"
+    pixel_format: "BayerRG8"        # Recommended Option: "RGB8Packed", "BayerRG8"
+    adc_bit_depth: "Bits_8"         # If using "BayerRG8", <adc_bit_depth> must be set as "Bits_8"; otherwise, it can be "Bits_8" or "Bits_12"
+    use_sensor_data_qos: false
+    camera_name: "camera"
+    frame_id: "hik_camera_optical_frame"     # If not set, it will be set as <camera_name>_optical_frame
+    camera_topic: "image"         # If not set, it will be set as <camera_name>/image
+
+    acquisition_frame_rate: 200.0   # Unit: Hz
+    exposure_time: 2500             # Unit: us
+    gain: 12.0                      # Range: 0.0 ~ 16.9, Unit: dB
+
+    enable_recorder: false
+    save_path: "/home/rm/Desktop/aim_ws/videos/"
+
+/video_player:
+  ros__parameters:
+    camera_info_url: "package://hik_camera/config/camera_info.yaml"
+    video_path: "/home/rm/RCS2025-log/video/1737586785.avi"
+    camera_name: "camera"
+    keep_looping: true
+    frame_id: "hik_camera_optical_frame"
+    frame_rate: 200.0
+    start_frame: 0

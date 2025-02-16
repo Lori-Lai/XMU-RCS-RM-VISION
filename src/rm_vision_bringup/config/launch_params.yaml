@@ -1,0 +1,10 @@
+odom2camera:
+  xyz: "\"0.14 0.0  0.07\""
+  rpy: "\"0.0  0.0  0.0\""
+
+camera: hik
+
+detector_log_level: INFO
+tracker_log_level: INFO
+serial_log_level: INFO
+solver_log_level: INFO

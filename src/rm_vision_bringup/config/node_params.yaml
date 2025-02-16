@@ -1,0 +1,74 @@
+/hik_camera:
+  ros__parameters:
+    camera_info_url: "package://hik_camera/config/camera_info.yaml"
+    pixel_format: "BayerRG8"        # Recommended Option: "RGB8Packed", "BayerRG8"
+    adc_bit_depth: "Bits_8"         # If using "BayerRG8", <adc_bit_depth> must be set as "Bits_8"; otherwise, it can be "Bits_8" or "Bits_12"
+    use_sensor_data_qos: false
+    camera_name: "camera"
+    frame_id: "camera_optical_frame"     # If not set, it will be set as <camera_name>_optical_frame
+    camera_topic: "/image_raw"         # If not set, it will be set as <camera_name>/image
+
+    acquisition_frame_rate: 200.0   # Unit: Hz
+    exposure_time: 200             # Unit: us
+    gain: 12.0                      # Range: 0.0 ~ 16.9, Unit: dB
+
+    enable_recorder: false
+    save_path: "/home/rm/Desktop/XMU-RCS-RM-VISION/videos"
+
+/serial_driver:
+  ros__parameters:
+    timestamp_offset: 0.006
+    device_name: /dev/ttyUSB0
+    baud_rate: 115200
+    flow_control: none
+    parity: none
+    stop_bits: "1"
+
+/armor_detector:
+  ros__parameters:
+    debug: false
+
+    detect_color: 1
+    binary_thres: 50
+
+    light.min_ratio: 0.1
+    armor.min_light_ratio: 0.8
+
+    classifier_threshold: 0.8
+    ignore_classes: ["negative"]
+
+/armor_tracker:
+  ros__parameters:
+    target_frame: odom
+    max_armor_distance: 10.0
+
+    ekf:
+      sigma2_q_xyz: 0.05  # 状态转移噪声方差 (x,y,z)
+      sigma2_q_yaw: 5.0   # 状态转移噪声方差 (yaw)
+      sigma2_q_r: 80.0    # 状态转移噪声方差 (r)
+
+      r_xyz_factor: 4e-4  # 位置观测噪声方差系数 (x,y,z)
+      r_yaw: 5e-3         # 位置观测噪声方差系数 (yaw)
+
+    tracker:
+      max_match_distance: 0.5
+      max_match_yaw_diff: 1.0
+
+      tracking_thres: 5
+      lost_time_thres: 1.0
+
+/armor_solver:
+  ros__parameters:
+    debug: true
+    
+    shooting_range_width: 0.04
+    shooting_range_height: 0.04
+    min_switching_v_yaw: 0.5
+    prediction_delay: 0.01      # 预测延迟时间（s），会影响选版
+    controller_delay: 0.60      # 控制延迟时间（s），不会影响选版
+    max_tracking_v_yaw: 60.0   # 转速大于这个值时，瞄准中心
+    side_angle: 15.0           # 跳转到下一装甲板的角度阈值
+    bullet_speed: 19.0         # 子弹速度
+    gravity: 9.8               # 重力加速度
+    compensator_type: "resistance"  # ideal or resistance
+    resistance: 0.47          # 空气阻力
