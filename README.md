@@ -58,37 +58,26 @@
 - ceres-solver 2.1.0
 
   ```bash
-  git clone -b tags/2.1.0 https://github.com/ceres-solver/ceres-solver.git
+  sudo apt install libgoogle-glog-dev libatlas-base-dev libeigen3-dev
+  
+  git clone https://github.com/ceres-solver/ceres-solver.git
   cd ceres-solver
-  mkdir build
-  cd build
-  cmake ..
-  make -j6
-  sudo make install
+  git checkout 2.1.0
+  # 同上
   ```
 
 - sophus 1.24.6
 
   ```bash
   git clone -b tags/1.24.6 https://github.com/strasdat/Sophus.git
-  cd Sophus
-  mkdir build
-  cd build
-  cmake ..
-  make -j6
-  sudo make install
+  # 同上
   ```
 
 - g2o
 
   ```bash
   git clone https://github.com/RainerKuemmerle/g2o.git
-  cd g2o
-  mkdir build
-  cd build
-  cmake ..
-  make -j6
-  sudo make install
+  # 同上
   ```
 
 ### 依赖
