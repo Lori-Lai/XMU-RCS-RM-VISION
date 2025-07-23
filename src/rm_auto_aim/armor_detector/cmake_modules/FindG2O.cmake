@@ -1,96 +1,54 @@
+# FindG2O.cmake
+
 # Locate the g2o libraries
 # A general framework for graph optimization.
-#
-# This module defines
-# G2O_FOUND, if false, do not try to link against g2o
-# G2O_LIBRARIES, path to the libg2o
-# G2O_INCLUDE_DIR, where to find the g2o header files
-#
-# Niko Suenderhauf <niko@etit.tu-chemnitz.de>
-# Adapted by Felix Endres <endres@informatik.uni-freiburg.de>
 
-IF(UNIX)
+# This module defines:
+#   G2O_FOUND         - set to TRUE if G2O was found
+#   G2O_INCLUDE_DIR   - where to find the g2o headers
+#   G2O_LIBRARIES     - the list of libraries to link against
 
-  #IF(G2O_INCLUDE_DIR AND G2O_LIBRARIES)
-    # in cache already
-    #  SET(G2O_FIND_QUIETLY TRUE)
-    #ENDIF(G2O_INCLUDE_DIR AND G2O_LIBRARIES)
+if(UNIX)
+  message(STATUS "Searching for g2o ...")
 
-  MESSAGE(STATUS "Searching for g2o ...")
-  FIND_PATH(G2O_INCLUDE_DIR
+  # 查找头文件路径
+  find_path(G2O_INCLUDE_DIR
     NAMES core math_groups types
     PATHS /usr/local /usr
-    PATH_SUFFIXES include/g2o include)
+    PATH_SUFFIXES include/g2o include
+  )
 
-  IF (G2O_INCLUDE_DIR)
-    MESSAGE(STATUS "Found g2o headers in: ${G2O_INCLUDE_DIR}")
-  ENDIF ()
+  if(G2O_INCLUDE_DIR)
+    message(STATUS "Found g2o headers in: ${G2O_INCLUDE_DIR}")
+  endif()
 
-  FIND_LIBRARY(G2O_CORE_LIB             
-    NAMES g2o_core g2o_core_rd
-    PATHS /usr/local /usr ${CMAKE_PREFIX_PATH}
-    PATH_SUFFIXES lib)
-  FIND_LIBRARY(G2O_STUFF_LIB            
-    NAMES g2o_stuff g2o_stuff_rd
-    PATHS /usr/local /usr ${CMAKE_PREFIX_PATH}
-    PATH_SUFFIXES lib)
-  FIND_LIBRARY(G2O_TYPES_SLAM2D_LIB     
-    NAMES g2o_types_slam2d g2o_types_slam2d_rd
-    PATHS /usr/local /usr ${CMAKE_PREFIX_PATH}
-    PATH_SUFFIXES lib)
-  FIND_LIBRARY(G2O_TYPES_SLAM3D_LIB     
-    NAMES g2o_types_slam3d g2o_types_slam3d_rd
-    PATHS /usr/local /usr ${CMAKE_PREFIX_PATH}
-    PATH_SUFFIXES lib)
-  FIND_LIBRARY(G2O_SOLVER_CHOLMOD_LIB   
-    NAMES g2o_solver_cholmod g2o_solver_cholmod_rd
-    PATHS /usr/local /usr ${CMAKE_PREFIX_PATH}
-    PATH_SUFFIXES lib)
-  FIND_LIBRARY(G2O_SOLVER_PCG_LIB       
-    NAMES g2o_solver_pcg g2o_solver_pcg_rd
-    PATHS /usr/local /usr ${CMAKE_PREFIX_PATH}
-    PATH_SUFFIXES lib)
-  FIND_LIBRARY(G2O_SOLVER_CSPARSE_LIB   
-    NAMES g2o_solver_csparse g2o_solver_csparse_rd
-    PATHS /usr/local /usr 
-    PATH_SUFFIXES lib)
-  FIND_LIBRARY(G2O_INCREMENTAL_LIB      
-    NAMES g2o_incremental g2o_incremental_rd
-    PATHS /usr/local /usr ${CMAKE_PREFIX_PATH}
-    PATH_SUFFIXES lib)
-  FIND_LIBRARY(G2O_CSPARSE_EXTENSION_LIB
-    NAMES g2o_csparse_extension g2o_csparse_extension_rd
-    PATHS /usr/local /usr ${CMAKE_PREFIX_PATH}
-    PATH_SUFFIXES lib)
+  # 查找你现有的库
+  find_library(G2O_CORE_LIB             NAMES g2o_core             PATHS /usr/local /usr PATH_SUFFIXES lib)
+  find_library(G2O_STUFF_LIB            NAMES g2o_stuff            PATHS /usr/local /usr PATH_SUFFIXES lib)
+  find_library(G2O_TYPES_SLAM2D_LIB     NAMES g2o_types_slam2d     PATHS /usr/local /usr PATH_SUFFIXES lib)
+  find_library(G2O_TYPES_SLAM3D_LIB     NAMES g2o_types_slam3d     PATHS /usr/local /usr PATH_SUFFIXES lib)
+  find_library(G2O_SOLVER_DENSE_LIB     NAMES g2o_solver_dense     PATHS /usr/local /usr PATH_SUFFIXES lib)
+  find_library(G2O_SOLVER_EIGEN_LIB     NAMES g2o_solver_eigen     PATHS /usr/local /usr PATH_SUFFIXES lib)
 
-  SET(G2O_LIBRARIES ${G2O_CSPARSE_EXTENSION_LIB}
-                    ${G2O_CORE_LIB}
-                    ${G2O_STUFF_LIB}
-                    ${G2O_TYPES_SLAM2D_LIB}
-                    ${G2O_TYPES_SLAM3D_LIB}
-                    ${G2O_SOLVER_CHOLMOD_LIB}
-                    ${G2O_SOLVER_PCG_LIB}
-                    ${G2O_SOLVER_CSPARSE_LIB}
-                    ${G2O_INCREMENTAL_LIB}
-                    )
+  # 构建库列表（仅添加找到的库）
+  set(G2O_LIBRARIES
+    ${G2O_CORE_LIB}
+    ${G2O_STUFF_LIB}
+    ${G2O_TYPES_SLAM2D_LIB}
+    ${G2O_TYPES_SLAM3D_LIB}
+    ${G2O_SOLVER_DENSE_LIB}
+    ${G2O_SOLVER_EIGEN_LIB}
+  )
 
-  IF(G2O_LIBRARIES AND G2O_INCLUDE_DIR)
-    SET(G2O_FOUND "YES")
-    IF(NOT G2O_FIND_QUIETLY)
-      MESSAGE(STATUS "Found libg2o: ${G2O_LIBRARIES}")
-    ENDIF()
-  ELSE(G2O_LIBRARIES AND G2O_INCLUDE_DIR)
-    IF(NOT G2O_LIBRARIES)
-      IF(G2O_FIND_REQUIRED)
-        message(FATAL_ERROR "Could not find libg2o!")
-      ENDIF()
-    ENDIF()
+  # 删除未找到（为空）的项
+  list(REMOVE_ITEM G2O_LIBRARIES "")
 
-    IF(NOT G2O_INCLUDE_DIR)
-      IF(G2O_FIND_REQUIRED)
-        message(FATAL_ERROR "Could not find g2o include directory!")
-      ENDIF()
-    ENDIF()
-  ENDIF()
-
-ENDIF(UNIX)
+  # 判断是否找到所有必要组件
+  if(G2O_LIBRARIES AND G2O_INCLUDE_DIR)
+    set(G2O_FOUND TRUE)
+    message(STATUS "Found libg2o: ${G2O_LIBRARIES}")
+  else()
+    set(G2O_FOUND FALSE)
+    message(WARNING "Could not find complete libg2o setup. Found: ${G2O_LIBRARIES}, Headers: ${G2O_INCLUDE_DIR}")
+  endif()
+endif()
