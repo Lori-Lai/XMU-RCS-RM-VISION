@@ -69,7 +69,7 @@
 - sophus 1.24.6
 
   ```bash
-  git clone -b tags/1.24.6 https://github.com/strasdat/Sophus.git
+  git clone -b 1.24.6 https://github.com/strasdat/Sophus.git
   # 同上
   ```
 
